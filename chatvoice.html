@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Chatbotz</title>
+<style>
+ 
+    body {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        background-image: url(imgbot.jpeg) ;
+        background-repeat: no-repeat;
+        background-size: cover;
+        padding: 20px;
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    .chatbox {
+        background: #dc6cb3;
+        padding: 25px;
+        border-radius: 20px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        width: 350px;
+        text-align: center;
+        border: 2px solid #e20498;
+    }
+
+    h2 {
+        color:#800748;
+        font-size: 26px;
+        margin-bottom: 15px;
+        font-weight: 700;
+    }
+
+    button {
+        padding: 12px;
+        width: 70%;
+        cursor: pointer;
+        background: #9aeb27;
+        color: #64A002;
+        border: none;
+        border-radius: 12px;
+        font-size: 18px;
+        transition: 0.3s ease;
+    }
+
+    button:hover {
+        background: #538400;
+        transform: scale(1.03);
+    }
+
+    
+</style>
+</head>
+<body>
+
+<div class="chatbox">
+    <h2>EnfermeiroBot</h2>
+    <button onclick="ouvir()">Falar Agora</button>
+</div>
+
+<script>
+const pergunta = ["apgar","nitrato de prata", "aquecido", "teste do pezinho", "deve ser amamentado "];
+
+const resposta = [
+    "É uma avaliação rápida feita no 1º e 5º minuto de vida pra ver como o bebê tá se adaptando...",
+    "É pra prevenir infecção nos olhos causada por bactérias.",
+    "Pra evitar hipotermia, já que o bebê perde calor super fácil.",
+    "Pra detectar doenças metabólicas e genéticas cedo.",
+    "Porque fortalece o vínculo e ajuda a regular temperatura e glicemia."
+];
+
+function falar(texto) {
+    const discurso = new SpeechSynthesisUtterance(texto);
+    discurso.lang = "pt-BR";
+    discurso.rate = 1;
+    window.speechSynthesis.speak(discurso);
+}
+
+function ouvir() {
+    const reconhecer = new webkitSpeechRecognition();
+    reconhecer.lang = "pt-BR";
+    reconhecer.start();
+
+    reconhecer.onresult = function(event) {
+        window.speechSynthesis.cancel();
+        const textoFalado = event.results[0][0].transcript.toLowerCase();
+        for (let i = 0; i < pergunta.length; i++) {
+            if (textoFalado.includes(pergunta[i])) {
+                falar(resposta[i]);
+                return;
+            }
+        }
+        falar("Desculpe, não entendi.");
+    };
+}
+</script>
+
+</body>
+</html>
